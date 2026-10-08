@@ -1,5 +1,5 @@
 - name: configure catalogue server 
-  hosts: frontend 
+  hosts: catalogue 
   become: yes 
   tasks:
   - name: disabled latest version of nodejs
