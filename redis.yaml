@@ -11,8 +11,8 @@
       state: present 
 
   - name: start and enable the mongodb server 
-    ansible.builtin.systemd_service:
-      name: mongod
+    ansible.builtin.service:
+      name: redis
       state: started
       enabled: true 
 
@@ -29,6 +29,6 @@
       replace: protected-mode no 
 
   - name: restart the mongodb server
-    ansible.builtin.systemd_service:
-      name: mongod
+    ansible.builtin.service:
+      name: redis
       state: restarted
