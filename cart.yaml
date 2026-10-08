@@ -16,12 +16,12 @@
       name: roboshop
       system: yes
       shell: /usr/sbin/nologin  # Prevents interactive login for security
-      create_home: /app          # System users rarely require a home directory
-      state: present
+      home: /app          # System users rarely require a home directory
+      
 
   - name: create directory 
     ansible.builtin.file:
-      src: /app 
+      path: /app 
       state: directory 
 
   - name: download the user code 
@@ -45,13 +45,13 @@
       dest: /etc/systemd/system/cart.service 
 
   - name: daemon reload 
-    ansible.builtin.systemd_service:
+    ansible.builtin.service:
       daemon_reload: true
 
   - name: enable and start the systemctl 
-    ansible.builtin.systemd_service:
+    ansible.builtin.service:
       name: user
-      state: start
+      state: started
       enabled: true 
 
   
