@@ -1,0 +1,75 @@
+- name: configure user server 
+  hosts: user 
+  become: yes 
+  tasks:
+
+  - name: install maven 
+    ansible.builtin.package:
+      name: maven
+      state: present 
+
+  - name: create system user 
+    ansible.builtin.user:
+      name: roboshop
+      system: yes
+      shell: /usr/sbin/nologin  # Prevents interactive login for security
+      create_home: /app          # System users rarely require a home directory
+      state: present
+
+  - name: create directory 
+    ansible.builtin.file:
+      src: /app 
+      state: directory 
+
+  - name: download the user code 
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
+      dest: /tmp/shipping.zip 
+
+  - name: unzip the user code 
+    ansible.builtin.unarchive:
+      src: /tmp/shipping.zip 
+      dest: /app 
+      remote_src: yes 
+
+  - name: install dependencies
+    ansible.builtin.command: 
+      cmd: mvn clean package
+      chdir: /app
+
+  - name: rename target file 
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
+
+  - name: setup systemctl service
+    ansible.builtin.copy:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service 
+
+  - name: daemon reload 
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+
+  - name: enable and start the systemctl 
+    ansible.builtin.systemd_service:
+      name: shipping
+      state: start
+      enabled: true 
+
+  - name: install mysql client 
+    ansible.builtin.package:
+      name: mysql  
+      state: present 
+
+  - name: load mysql data
+    ansible.builtin.command: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/schema.sql
+    ansible.builtin.command: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/app-user.sql 
+    ansible.builtin.command: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/master-data.sql
+  
+  - name: restart the systemctl 
+    ansible.builtin.systemd_service:
+      name: shipping
+      state: restart
+      
+
+  
+      
