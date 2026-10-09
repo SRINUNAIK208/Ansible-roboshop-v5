@@ -62,9 +62,9 @@
       state: present 
 
   - name: load mysql data
-    ansible.builtin.command: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/schema.sql
-    ansible.builtin.command: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/app-user.sql 
-    ansible.builtin.command: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/master-data.sql
+    ansible.builtin.shell: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/schema.sql
+    ansible.builtin.shell: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/app-user.sql 
+    ansible.builtin.shell: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/master-data.sql
   
   - name: restart the systemctl 
     ansible.builtin.systemd_service:
