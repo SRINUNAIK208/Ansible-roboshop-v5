@@ -13,9 +13,9 @@
       state: present 
 
   - name: start and enable the rabbitmq server 
-    ansible.builtin.systemd_service:
+    ansible.builtin.service:
       name: rabbitmq-server
-      state: start
+      state: started
       enabled: true 
   
   - name: set the permission for rabbitmq

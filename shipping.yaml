@@ -61,13 +61,17 @@
       name: mysql  
       state: present 
 
-  - name: load mysql data
+  - name: load the data from schema
     ansible.builtin.shell: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/schema.sql
-    ansible.builtin.shell: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/app-user.sql 
+
+  - name: load the data from schema
+    ansible.builtin.shell: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/app-user.sql
+
+  - name: load the data from schema
     ansible.builtin.shell: mysql -h mysql.srinunayak.online -uroot -pRoboShop@1 < /app/db/master-data.sql
-  
+
   - name: restart the systemctl 
-    ansible.builtin.systemd_service:
+    ansible.builtin.service:
       name: shipping
       state: restarted
       
