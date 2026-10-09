@@ -1,5 +1,5 @@
-- name: configure user server 
-  hosts: user 
+- name: configure shipping server 
+  hosts: shipping 
   become: yes 
   tasks:
 
